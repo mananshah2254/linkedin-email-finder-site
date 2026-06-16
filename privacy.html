@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — LinkedIn Email Finder</title>
+<style>
+  body { max-width: 760px; margin: 40px auto; padding: 0 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1d1d1f; line-height: 1.65; }
+  h1 { font-size: 28px; letter-spacing: -0.02em; }
+  h2 { font-size: 18px; margin-top: 32px; }
+  .muted { color: #6e6e73; font-size: 14px; }
+  code { background: #f5f5f7; padding: 1px 5px; border-radius: 5px; font-size: 13px; }
+  a { color: #0071E3; }
+</style>
+</head>
+<body>
+  <h1>Privacy Policy</h1>
+  <p class="muted">LinkedIn Email Finder (Chrome extension) · Last updated: 16 June 2026</p>
+
+  <p>LinkedIn Email Finder ("the extension") helps you predict likely work-email
+  addresses from public company email patterns and, optionally, send emails from
+  your own Gmail account. This policy explains exactly what the extension does and
+  does not do with data.</p>
+
+  <h2>Summary</h2>
+  <ul>
+    <li>The extension has <strong>no backend server of its own</strong>. It runs entirely in your browser.</li>
+    <li>We do <strong>not</strong> sell, rent, or share your data, and we do not run analytics or advertising trackers.</li>
+    <li>Data is sent only to services <strong>you</strong> configure or authorize: Hunter.io and Google (Gmail).</li>
+  </ul>
+
+  <h2>What the extension accesses</h2>
+  <ul>
+    <li><strong>Public LinkedIn profile data</strong> (names, companies, occupations) visible on the
+      pages you open. This is read in your browser to generate predicted emails. It is
+      <strong>not</strong> transmitted to us or stored off your device.</li>
+    <li><strong>Company names</strong> are sent to <a href="https://hunter.io" target="_blank">Hunter.io</a>
+      (using your own API key) to look up a company's email domain and pattern. See Hunter.io's
+      privacy policy for how they process that request.</li>
+    <li><strong>Gmail (optional, only if you connect it):</strong> with your explicit authorization the
+      extension uses the <code>gmail.send</code> scope to send emails <em>you compose</em> from your own
+      account. It sends one message per recipient on your action. The extension <strong>cannot read,
+      search, delete, or modify</strong> your mailbox — <code>gmail.send</code> grants send-only access.
+      Your <code>email</code> address is read once (via Google's userinfo endpoint) only to display which
+      account is connected.</li>
+  </ul>
+
+  <h2>What is stored, and where</h2>
+  <p>All of the following is stored <strong>locally in your browser</strong> via
+  <code>chrome.storage.local</code> and never leaves your device except as described above:</p>
+  <ul>
+    <li>Your Hunter.io API key.</li>
+    <li>Predicted email results, cached for 14 days to avoid re-spending API credits.</li>
+    <li>Email templates you create (subject, body, optional attachment).</li>
+    <li>Records of emails you send (recipient, subject, time) used to show send status.</li>
+  </ul>
+  <p>The Gmail access token is managed by Chrome's <code>identity</code> system, not stored by us.
+  You can disconnect Gmail at any time from the extension, which revokes the token.</p>
+
+  <h2>Optional email open/click tracking</h2>
+  <p>If you enable tracking, the extension adds an invisible pixel and/or rewrites links so that
+  opens and clicks are recorded. You may use the built-in endpoint or your own self-hosted endpoint.
+  When tracking is enabled, open/click events (an opaque token and timestamp) are recorded at that
+  endpoint so you can see whether your emails were opened. You are responsible for disclosing tracking
+  to recipients where the law requires it (e.g., GDPR). Tracking is off unless you turn it on.</p>
+
+  <h2>Your responsibilities</h2>
+  <p>Predicted emails are <strong>not verified</strong> and may be inaccurate. You are responsible for
+  complying with all applicable laws when contacting people (including consent, sender identity, and
+  unsubscribe requirements such as GDPR and CAN-SPAM).</p>
+
+  <h2>Data deletion</h2>
+  <p>Removing the extension, or clearing its storage, deletes all locally stored data. Disconnecting
+  Gmail revokes the access token.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy: <a href="mailto:manan.hiren.shah@gmail.com">manan.hiren.shah@gmail.com</a>.</p>
+</body>
+</html>
