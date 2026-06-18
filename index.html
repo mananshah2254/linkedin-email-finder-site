@@ -3,52 +3,361 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TrailMail</title>
-<style>
-  body { max-width: 760px; margin: 0 auto; padding: 60px 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color: #1d1d1f; line-height: 1.65; }
-  .logo { width: 64px; height: 64px; border-radius: 18px; overflow: hidden;
-    box-shadow: 0 6px 20px rgba(10,40,120,0.3); }
-  .logo svg { display: block; width: 100%; height: 100%; }
-  h1 { font-size: 34px; letter-spacing: -0.03em; margin: 20px 0 6px; }
-  .tag { color: #6e6e73; font-size: 17px; }
-  h2 { font-size: 20px; margin-top: 36px; }
-  ul { padding-left: 20px; }
-  li { margin: 6px 0; }
-  .note { background: #fff8e6; border: 1px solid #f0d98a; border-radius: 10px;
-    padding: 14px 16px; font-size: 14px; color: #6b5500; margin: 24px 0; }
-  a { color: #0071E3; }
-  footer { margin-top: 48px; color: #8e8e93; font-size: 13px; }
-</style>
+<meta name="theme-color" content="#05060d" />
+<title>TrailMail: Turn LinkedIn into your inbox</title>
+<meta name="description" content="TrailMail predicts work emails for a whole LinkedIn company page on one Hunter.io credit, sends them from your own Gmail, and tracks every open and click. A Chrome extension." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="TrailMail: Turn LinkedIn into your inbox" />
+<meta property="og:description" content="1 Hunter.io credit = up to 15 work emails. Predict a whole LinkedIn company page, send from your own Gmail, track every open." />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+
+<!-- libs (expose globals; module loads after) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
-  <div class="logo"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A84FF"/><stop offset=".55" stop-color="#3B6BF5"/><stop offset="1" stop-color="#5E5CE6"/></linearGradient></defs><rect width="100" height="100" rx="24" fill="url(#lg)"/><path d="M50 84 C37 66 29 60 29 45.5 a21 21 0 1 1 42 0 C71 60 63 66 50 84 Z" fill="#fff"/><rect x="38.5" y="37.5" width="23" height="16" rx="3" fill="#3B6BF5"/><path d="M40.5 39.5 L50 47 L59.5 39.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <h1>TrailMail</h1>
-  <p class="tag">Predict work emails on LinkedIn and send them from your own Gmail — no backend.</p>
 
-  <h2>What it does</h2>
-  <ul>
-    <li>Scans the LinkedIn profiles on a company People page and predicts each person's likely
-      work email from the company's public email pattern (via your Hunter.io key).</li>
-    <li>Lets you save reusable templates (subject + body) with merge tags like <code>{First}</code>.</li>
-    <li>Optionally connects your own Gmail to send personalized emails to selected people —
-      one message per recipient, straight from your account.</li>
-  </ul>
-
-  <div class="note">
-    <strong>Predictions only.</strong> Generated emails are inferred from public company patterns and
-    are <strong>not verified</strong> — some may bounce. You are responsible for compliant, authorized
-    outreach (consent, identity, unsubscribe).
+<!-- Preloader -->
+<div class="preloader" id="preloader">
+  <div class="preloader__inner">
+    <svg class="preloader__mark" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><linearGradient id="plg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#0A84FF"/><stop offset=".55" stop-color="#3B6BF5"/><stop offset="1" stop-color="#5E5CE6"/>
+      </linearGradient></defs>
+      <path d="M50 84 C37 66 29 60 29 45.5 a21 21 0 1 1 42 0 C71 60 63 66 50 84 Z" fill="url(#plg)"/>
+      <rect x="38.5" y="37.5" width="23" height="16" rx="3" fill="#fff" opacity=".95"/>
+      <path d="M40.5 39.5 L50 47 L59.5 39.5" fill="none" stroke="#3B6BF5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="preloader__bar"><span id="preloaderFill"></span></div>
+    <div class="preloader__pct" id="preloaderPct">0%</div>
   </div>
+</div>
 
-  <h2>Privacy</h2>
-  <p>The extension runs entirely in your browser with no server of its own. Read the full
-  <a href="privacy.html">Privacy Policy</a>.</p>
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
 
-  <footer>
-    © 2026 TrailMail · Contact:
-    <a href="mailto:manan.hiren.shah@gmail.com">manan.hiren.shah@gmail.com</a>
-  </footer>
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Fixed 3D canvas -->
+<canvas id="scene" class="scene"></canvas>
+<div class="scene-fallback" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Nav -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top" data-magnetic data-cursor="link">
+    <span class="nav__logo">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="nlg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A84FF"/><stop offset=".55" stop-color="#3B6BF5"/><stop offset="1" stop-color="#5E5CE6"/></linearGradient></defs><rect width="100" height="100" rx="26" fill="url(#nlg)"/><path d="M50 84 C37 66 29 60 29 45.5 a21 21 0 1 1 42 0 C71 60 63 66 50 84 Z" fill="#fff"/><rect x="38.5" y="37.5" width="23" height="16" rx="3" fill="#3B6BF5"/><path d="M40.5 39.5 L50 47 L59.5 39.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="nav__name">TrailMail</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#problem" data-cursor="link">The problem</a>
+    <a href="#how" data-cursor="link">How it works</a>
+    <a href="#features" data-cursor="link">Features</a>
+    <a href="#why" data-cursor="link">Why us</a>
+  </nav>
+  <a class="btn btn--nav" id="navCta" href="https://chromewebstore.google.com/detail/bgmdpfdhgaignpljdpkmneeggbiolkce" target="_blank" rel="noopener" data-magnetic data-cursor="cta">
+    <svg viewBox="0 0 48 48" class="btn__chrome" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#fff"/><circle cx="24" cy="24" r="9" fill="#1a73e8"/><path d="M24 6a18 18 0 0 1 15.6 9H24a9 9 0 0 0-7.8 4.5z" fill="#ea4335"/><path d="M39.6 15A18 18 0 0 1 33 38l-7.8-13.5A9 9 0 0 0 24 15z" fill="#fbbc04" opacity=".0"/><path d="M8.4 15 16.2 28.5A9 9 0 0 0 24 33h-.1L15 42A18 18 0 0 1 8.4 15z" fill="#34a853"/><path d="M39.6 15A18 18 0 0 1 24 42l7.8-13.5A9 9 0 0 0 33 15z" fill="#fbbc04"/></svg>
+    Add to Chrome
+  </a>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__inner">
+      <div class="hero__eyebrow reveal-fade">
+        <span class="pill">⚡ Chrome extension · Free to install</span>
+      </div>
+      <h1 class="hero__title">
+        <span class="line"><span>Turn LinkedIn</span></span>
+        <span class="line"><span>into your <em>inbox.</em></span></span>
+      </h1>
+      <p class="hero__sub reveal-fade">
+        TrailMail predicts the work email of everyone on a LinkedIn company page,
+        lets you send from your <strong>own Gmail</strong>, and tracks every open,
+        all in one tab.
+      </p>
+      <div class="hero__cta reveal-fade">
+        <a class="btn btn--primary btn--lg" href="https://chromewebstore.google.com/detail/bgmdpfdhgaignpljdpkmneeggbiolkce" target="_blank" rel="noopener" data-magnetic data-cursor="cta">
+          <span>Add to Chrome for free</span>
+          <svg viewBox="0 0 24 24" class="btn__arrow"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn--ghost btn--lg" href="#how" data-cursor="link">See how it works</a>
+      </div>
+      <div class="hero__hook reveal-fade">
+        <strong>1 Hunter.io credit</strong> = up to <strong>15 work emails</strong>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"><i></i></div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section problem" id="problem">
+    <div class="container">
+      <span class="kicker kicker--warn">The problem</span>
+      <h2 class="reveal-words big">You found the perfect person. Now what?</h2>
+      <p class="lead reveal-fade">
+        You are staring at the ideal lead on LinkedIn. The one detail you actually need,
+        their email, is the one thing the page will not give you.
+      </p>
+
+      <div class="pain-grid">
+        <div class="pain glass" data-tilt data-cursor="card">
+          <div class="pain__num">01</div>
+          <h3>Credits vanish one email at a time</h3>
+          <p>Most finders charge a lookup for <em>every single person</em>. A free tier dries up before you have contacted a single team.</p>
+        </div>
+        <div class="pain glass" data-tilt data-cursor="card">
+          <div class="pain__num">02</div>
+          <h3>You bounce between five tabs</h3>
+          <p>LinkedIn, then a finder, then a spreadsheet, then your mail client, then a tracker. Copy, paste, lose your place, repeat.</p>
+        </div>
+        <div class="pain glass" data-tilt data-cursor="card">
+          <div class="pain__num">03</div>
+          <h3>You hit send into the void</h3>
+          <p>No idea if it landed, got opened, or bounced. Outreach without signal is just loud guessing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE TURN / HOOK -->
+  <section class="section turn" id="turn">
+    <div class="container turn__inner">
+      <span class="kicker">The turn</span>
+      <h2 class="turn__line reveal-words">What if <em>one</em> lookup covered the <em>whole</em> team?</h2>
+      <div class="turn__stat">
+        <div class="turn__stat-num"><span class="count" data-to="1">0</span></div>
+        <div class="turn__stat-lbl">Hunter.io credit</div>
+        <div class="turn__eq">=</div>
+        <div class="turn__stat-num turn__stat-num--big">up to <span class="count" data-to="15">0</span></div>
+        <div class="turn__stat-lbl">work emails generated</div>
+      </div>
+      <p class="lead reveal-fade">
+        TrailMail reads a company's verified email pattern <strong>once</strong>, then
+        generates a predicted address for everyone on the page, all for free. Your free Hunter
+        tier of 25 lookups a month becomes <strong>hundreds of emails</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section how" id="how">
+    <div class="container">
+      <span class="kicker">How it works</span>
+      <h2 class="reveal-words big">Three steps. One tab. Zero copying and pasting.</h2>
+    </div>
+
+    <div class="steps">
+      <!-- Step 1 -->
+      <article class="step">
+        <div class="step__text">
+          <div class="step__badge">01 · Predict</div>
+          <h3>Scan a page, get the whole team's emails</h3>
+          <p>Open any LinkedIn company People page. TrailMail reads the names, roles, and company, looks up the verified email pattern with <strong>one</strong> Hunter.io credit, and predicts an address for up to 15 people at once. Every result is tagged <span class="tag-hi">HIGH</span>, <span class="tag-md">MEDIUM</span>, or <span class="tag-lo">LOW</span> confidence.</p>
+          <ul class="ticks">
+            <li>Anchored to the company's real pattern and verified against multiple records</li>
+            <li>Confidence on every single result, so you know what to trust</li>
+          </ul>
+        </div>
+        <div class="step__media">
+          <div class="device glass" data-tilt data-cursor="img">
+            <img src="assets/shot1.png" alt="TrailMail predicting emails on a LinkedIn company page" loading="lazy" />
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 2 -->
+      <article class="step step--rev">
+        <div class="step__text">
+          <div class="step__badge">02 · Send</div>
+          <h3>Email from your own Gmail, fully personalized</h3>
+          <p>Pick who to reach, write a template once with merge tags like <code>{First}</code>, <code>{Company}</code>, <code>{Role}</code>, and send. Every message goes out <strong>one per person</strong> from your real account, landing in your own Sent folder.</p>
+          <ul class="ticks">
+            <li>Gmail access is send only, so TrailMail can never read your mailbox</li>
+            <li>No backend, no shared server, no credentials stored anywhere but your browser</li>
+          </ul>
+        </div>
+        <div class="step__media">
+          <div class="device glass" data-tilt data-cursor="img">
+            <img src="assets/shot2.png" alt="Composing a templated email inside TrailMail" loading="lazy" />
+          </div>
+        </div>
+      </article>
+
+      <!-- Step 3 -->
+      <article class="step">
+        <div class="step__text">
+          <div class="step__badge step__badge--mint">03 · Track</div>
+          <h3>See every open and click, right in Gmail</h3>
+          <p>TrailMail badges your Gmail Sent list with <span class="tag-open">✓ Opened</span> and <span class="tag-click">↗ Clicked</span> as people engage. Finally, outreach with a feedback loop. You see what is landing without ever leaving your inbox.</p>
+          <ul class="ticks">
+            <li>Tracking works out of the box, with zero setup</li>
+            <li>Respects privacy, and you can self host it for full control</li>
+          </ul>
+        </div>
+        <div class="step__media">
+          <div class="device glass" data-tilt data-cursor="img">
+            <img src="assets/shot3.png" alt="Open and click tracking badges in the Gmail Sent list" loading="lazy" />
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section features" id="features">
+    <div class="container">
+      <span class="kicker">Everything inside</span>
+      <h2 class="reveal-words big">A full outreach stack in one extension</h2>
+      <div class="feat-grid">
+        <div class="feat glass feat--wide" data-tilt data-cursor="card">
+          <div class="feat__icon">💳</div>
+          <h3>1 credit → up to 15 emails</h3>
+          <p>One company lookup covers the whole page. Stretch a free Hunter tier into hundreds of predicted addresses a month.</p>
+        </div>
+        <div class="feat glass" data-tilt data-cursor="card">
+          <div class="feat__icon">🎯</div>
+          <h3>Confidence scoring</h3>
+          <p>Every prediction is graded HIGH / MEDIUM / LOW so you know exactly what to trust.</p>
+        </div>
+        <div class="feat glass" data-tilt data-cursor="card">
+          <div class="feat__icon">⚡</div>
+          <h3>Verified patterns</h3>
+          <p>Anchored to the company's real email format and verified against multiple records.</p>
+        </div>
+        <div class="feat glass" data-tilt data-cursor="card">
+          <div class="feat__icon">✍️</div>
+          <h3>Templates &amp; merge tags</h3>
+          <p>Write once with {First}, {Company}, {Role}. Personalize every send automatically.</p>
+        </div>
+        <div class="feat glass" data-tilt data-cursor="card">
+          <div class="feat__icon">📨</div>
+          <h3>Send from your Gmail</h3>
+          <p>One message per person, from your account, in your Sent folder. No spoofing, no relay.</p>
+        </div>
+        <div class="feat glass feat--mint" data-tilt data-cursor="card">
+          <div class="feat__icon">📈</div>
+          <h3>Open &amp; click tracking</h3>
+          <p>Live ✓ Opened / ↗ Clicked badges right inside your Gmail Sent list.</p>
+        </div>
+        <div class="feat glass" data-tilt data-cursor="card">
+          <div class="feat__icon">📋</div>
+          <h3>Export anytime</h3>
+          <p>Copy to clipboard or download a CSV of every predicted address in one click.</p>
+        </div>
+        <div class="feat glass feat--wide" data-tilt data-cursor="card">
+          <div class="feat__icon">🔒</div>
+          <h3>Privacy first by design</h3>
+          <p>Runs entirely in your browser. No server of its own, no data collection, no third party storage. Your key and templates never leave your machine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US / COMPARISON -->
+  <section class="section why" id="why">
+    <div class="container">
+      <span class="kicker">Why TrailMail</span>
+      <h2 class="reveal-words big">The old way vs. the trail</h2>
+      <div class="compare">
+        <div class="compare__col compare__col--old glass" data-cursor="card">
+          <div class="compare__head">The old way</div>
+          <ul>
+            <li><span>✕</span> A credit burned on every single email</li>
+            <li><span>✕</span> Five tabs and a spreadsheet</li>
+            <li><span>✕</span> Send and pray, with no feedback</li>
+            <li><span>✕</span> Your leads sitting on someone else's server</li>
+            <li><span>✕</span> Monthly seat fees before you send a word</li>
+          </ul>
+        </div>
+        <div class="compare__vs">vs</div>
+        <div class="compare__col compare__col--new glass" data-cursor="card">
+          <div class="compare__head compare__head--new">TrailMail</div>
+          <ul>
+            <li><span>✓</span> One credit covers a whole company</li>
+            <li><span>✓</span> Predict, send &amp; track in one LinkedIn tab</li>
+            <li><span>✓</span> Live open &amp; click signal in your inbox</li>
+            <li><span>✓</span> 100% in your browser, nothing collected</li>
+            <li><span>✓</span> Free to install, send from your own Gmail</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE STRIP -->
+  <section class="section showcase">
+    <div class="container">
+      <div class="showcase__frame glass" data-tilt data-cursor="img">
+        <img src="assets/shot4.png" alt="TrailMail glass sidebar on LinkedIn" loading="lazy" />
+      </div>
+      <p class="showcase__cap reveal-fade">An Apple glass sidebar that lives quietly on LinkedIn and never leaks a pixel.</p>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section cta" id="cta">
+    <div class="container cta__inner">
+      <h2 class="cta__title reveal-words">Start your first trail today.</h2>
+      <p class="lead reveal-fade">Install TrailMail, paste a free Hunter.io key, connect your Gmail, and turn the next company page you open into a sent campaign.</p>
+      <a class="btn btn--primary btn--xl" href="https://chromewebstore.google.com/detail/bgmdpfdhgaignpljdpkmneeggbiolkce" target="_blank" rel="noopener" data-magnetic data-cursor="cta">
+        <svg viewBox="0 0 48 48" class="btn__chrome" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#fff"/><circle cx="24" cy="24" r="9" fill="#1a73e8"/><path d="M24 6a18 18 0 0 1 15.6 9H24a9 9 0 0 0-7.8 4.5z" fill="#ea4335"/><path d="M8.4 15 16.2 28.5A9 9 0 0 0 24 33h-.1L15 42A18 18 0 0 1 8.4 15z" fill="#34a853"/><path d="M39.6 15A18 18 0 0 1 24 42l7.8-13.5A9 9 0 0 0 33 15z" fill="#fbbc04"/></svg>
+        <span>Add TrailMail to Chrome</span>
+      </a>
+      <p class="cta__fine">Free · Predictions only, not verified · You own compliant, authorized outreach (GDPR / CAN-SPAM).</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="nav__logo">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="flg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A84FF"/><stop offset=".55" stop-color="#3B6BF5"/><stop offset="1" stop-color="#5E5CE6"/></linearGradient></defs><rect width="100" height="100" rx="26" fill="url(#flg)"/><path d="M50 84 C37 66 29 60 29 45.5 a21 21 0 1 1 42 0 C71 60 63 66 50 84 Z" fill="#fff"/><rect x="38.5" y="37.5" width="23" height="16" rx="3" fill="#3B6BF5"/><path d="M40.5 39.5 L50 47 L59.5 39.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <div>
+        <strong>TrailMail</strong>
+        <p>Turn LinkedIn into your inbox.</p>
+      </div>
+    </div>
+    <div class="footer__links">
+      <a href="https://chromewebstore.google.com/detail/bgmdpfdhgaignpljdpkmneeggbiolkce" target="_blank" rel="noopener" data-cursor="link">Chrome Web Store</a>
+      <a href="privacy.html" data-cursor="link">Privacy</a>
+      <a href="mailto:manan.hiren.shah@gmail.com" data-cursor="link">Contact</a>
+    </div>
+  </div>
+  <div class="footer__fine container">
+    © 2026 TrailMail · Independent tool, not affiliated with LinkedIn or Hunter.io · Predicted emails are not verified.
+  </div>
+</footer>
+
+<script type="module" src="main.js"></script>
 </body>
 </html>
