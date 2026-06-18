@@ -6,8 +6,8 @@
   --bg:#05060d;
   --bg-soft:#080b1a;
   --ink:#eef2ff;
-  --muted:#929bc0;
-  --muted-dim:#646d92;
+  --muted:#aab3d4;
+  --muted-dim:#8a92b6;
   --blue:#0A84FF;
   --indigo:#5E5CE6;
   --violet:#7c5cff;
@@ -47,7 +47,11 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:rgba(12
 
 /* ---------- Layout ---------- */
 .container{width:100%;max-width:var(--max);margin:0 auto;padding:0 28px}
-.section{position:relative;padding:clamp(90px,14vh,170px) 0;z-index:2}
+.section{position:relative;padding:clamp(90px,14vh,170px) 0;z-index:2;
+  background:rgba(7,9,20,.78);backdrop-filter:blur(10px) saturate(120%);-webkit-backdrop-filter:blur(10px) saturate(120%)}
+/* soften the seam where the first content section meets the transparent hero */
+.hero + .section::before{content:"";position:absolute;left:0;right:0;top:-90px;height:90px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(7,9,20,.78))}
 
 /* ---------- 3D canvas ---------- */
 .scene{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block;pointer-events:none}
@@ -139,15 +143,20 @@ body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
 .nav__links a:hover{color:var(--ink)}
 .nav__links a:hover::after{width:100%}
 @media (max-width:880px){.nav__links{display:none}}
+/* backdrop blur is expensive on phones; keep the solid bg, drop the blur */
+@media (max-width:760px){.section{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(7,9,20,.9)}}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;min-height:100vh;display:flex;align-items:center;z-index:2;padding:120px 0 80px}
+/* dark scrim behind hero copy so it reads over the live 3D */
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(75% 70% at 32% 46%,rgba(4,5,12,.72),rgba(4,5,12,.28) 55%,transparent 78%)}
 .hero__inner{max-width:var(--max);margin:0 auto;padding:0 28px;width:100%}
 .pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-d);font-size:13px;letter-spacing:.02em;
   padding:8px 16px;border-radius:100px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(12px);color:var(--muted)}
 .hero__eyebrow{margin-bottom:26px}
 .hero__title{font-family:var(--font-d);font-weight:700;letter-spacing:-.04em;line-height:.96;
-  font-size:clamp(48px,9vw,128px)}
+  font-size:clamp(48px,9vw,128px);filter:drop-shadow(0 6px 34px rgba(0,0,0,.55))}
 .hero__title .line{display:block;overflow:hidden}
 .hero__title .line>span{display:block;will-change:transform}
 .hero__sub{max-width:560px;margin:30px 0 0;font-size:clamp(17px,2vw,21px);line-height:1.6;color:var(--muted)}
@@ -277,7 +286,7 @@ h2.big{font-family:var(--font-d);font-weight:700;letter-spacing:-.03em;line-heig
 .cta__fine{margin-top:24px;font-size:13px;color:var(--muted-dim);max-width:560px}
 
 /* ---------- Footer ---------- */
-.footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:60px 0 40px;background:rgba(5,6,13,.7);backdrop-filter:blur(12px)}
+.footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:60px 0 40px;background:rgba(6,8,16,.86);backdrop-filter:blur(12px)}
 .footer__inner{display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
 .footer__brand{display:flex;align-items:center;gap:14px}
 .footer__brand strong{font-family:var(--font-d);font-size:18px}

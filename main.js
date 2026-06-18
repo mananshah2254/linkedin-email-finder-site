@@ -179,7 +179,7 @@ function initScene() {
   const sprite = softSprite();
   const pMat = new THREE.PointsMaterial({
     size: isSmall ? 0.14 : 0.12, map: sprite, vertexColors: true,
-    transparent: true, opacity: 0.85, depthWrite: false,
+    transparent: true, opacity: 0.55, depthWrite: false,
     blending: THREE.AdditiveBlending, sizeAttenuation: true,
   });
   const points = new THREE.Points(pGeo, pMat);
@@ -251,7 +251,7 @@ function initScene() {
   nGeo.setAttribute('position', new THREE.BufferAttribute(nPos, 3));
   nGeo.setAttribute('color', new THREE.BufferAttribute(nCol, 3));
   const nearPoints = new THREE.Points(nGeo, new THREE.PointsMaterial({
-    size: 0.32, map: sprite, vertexColors: true, transparent: true, opacity: 0.6,
+    size: 0.3, map: sprite, vertexColors: true, transparent: true, opacity: 0.42,
     depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true,
   }));
   floatGroup.add(nearPoints);
@@ -328,7 +328,7 @@ function initScene() {
   composer.addPass(new RenderPass(scene, camera));
   let bloom = null;
   if (!isSmall) {
-    bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.95, 0.62, 0.0);
+    bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.7, 0.6, 0.08);
     composer.addPass(bloom);
   }
 
@@ -392,7 +392,9 @@ function initScene() {
     wire.material.opacity = 0.45 + Math.sin(et * 1.2) * 0.12;
     core.material.emissiveIntensity = 1.3 + Math.sin(et * 2) * 0.4 + sT * 0.6;
     glow.material.opacity = 0.75 + Math.sin(et * 1.5) * 0.12;
-    if (bloom) bloom.strength = 0.85 + sT * 0.5 + Math.sin(et) * 0.05;
+    if (bloom) bloom.strength = 0.6 + sT * 0.25 + Math.sin(et) * 0.04;
+    // fade the canvas back as content scrolls in, so text always wins
+    canvas.style.opacity = String(1 - Math.min(sT * 1.4, 0.55));
 
     // rings spin independently, opacity pulses around each ring's base
     for (const m of ringMeshes) {
