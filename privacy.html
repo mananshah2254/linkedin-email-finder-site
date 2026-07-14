@@ -42,9 +42,9 @@
     </a>
 
     <h1>Privacy Policy</h1>
-    <p class="muted">TrailMail (Chrome extension) · Last updated: 16 June 2026</p>
+    <p class="muted">TrailMail (Chrome extension) · Last updated: 14 July 2026</p>
 
-    <p style="margin-top:24px">TrailMail ("the extension") helps you predict likely work-email addresses from public company email patterns and, optionally, send emails from your own Gmail account. This policy explains exactly what the extension does and does not do with data.</p>
+    <p style="margin-top:24px">TrailMail ("the extension") helps you predict likely work-email addresses from public company email patterns and, optionally, send emails from your own Gmail account. This policy explains exactly what the extension does and does not do with data, including data obtained through Google APIs.</p>
 
     <h2>Summary</h2>
     <ul>
@@ -53,11 +53,39 @@
       <li>Data is sent only to services <strong>you</strong> configure or authorize: Hunter.io and Google (Gmail).</li>
     </ul>
 
+    <h2>How TrailMail uses Google user data</h2>
+    <p>TrailMail integrates with Google only so that you can send prediction-generated emails from your own Gmail account, with your explicit, revocable authorization via Google Sign-In (OAuth). TrailMail requests exactly three scopes, each used for a single, narrow purpose:</p>
+    <ul>
+      <li><code>https://www.googleapis.com/auth/gmail.send</code> &mdash; used only to transmit the messages <em>you</em> compose and click "send" on, one at a time, directly to Gmail's API. This scope is <strong>send-only</strong>: TrailMail cannot read, search, list, label, delete, forward, or otherwise access any email already in your mailbox, your contacts, or your drafts.</li>
+      <li><code>email</code> (Google userinfo) &mdash; used once per sign-in, purely to look up and display which Gmail address is currently connected inside the extension's popup, so you know which account will be used to send.</li>
+      <li><code>openid</code> &mdash; used as part of the standard Google Sign-In handshake to authenticate the connection; no separate profile data is requested or stored.</li>
+    </ul>
+    <p>Beyond these three narrow uses, TrailMail does <strong>not</strong>:</p>
+    <ul>
+      <li>read, transmit, or expose the content of any Gmail message other than the one you actively send;</li>
+      <li>share, sell, rent, or transfer Google user data to any third party, advertiser, or data broker;</li>
+      <li>use Google user data for advertising, profiling, or any purpose unrelated to sending the message you initiated;</li>
+      <li>use Google user data to train, improve, or fine-tune any AI/ML model, generalized or otherwise;</li>
+      <li>allow any human (including us) to read Google user data, except where you directly contact us for support about a specific problem and voluntarily share it.</li>
+    </ul>
+    <p>TrailMail's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
     <h2>What the extension accesses</h2>
     <ul>
       <li><strong>Public LinkedIn profile data</strong> (names, companies, occupations) visible on the pages you open. This is read in your browser to generate predicted emails. It is <strong>not</strong> transmitted to us or stored off your device.</li>
       <li><strong>Company names</strong> are sent to <a href="https://hunter.io" target="_blank" rel="noopener">Hunter.io</a> (using your own API key) to look up a company's email domain and pattern. See Hunter.io's privacy policy for how they process that request.</li>
       <li><strong>Gmail (optional, only if you connect it):</strong> with your explicit authorization the extension uses the <code>gmail.send</code> scope to send emails <em>you compose</em> from your own account. It sends one message per recipient on your action. The extension <strong>cannot read, search, delete, or modify</strong> your mailbox, because <code>gmail.send</code> grants send only access. Your <code>email</code> address is read once (via Google's userinfo endpoint) only to display which account is connected.</li>
+    </ul>
+
+    <h2>Data security &amp; protection mechanisms</h2>
+    <p>Because Gmail access is a sensitive permission, TrailMail is built to minimize what could ever be exposed, even in principle:</p>
+    <ul>
+      <li><strong>No backend, no server-side storage.</strong> TrailMail has no server of its own. There is no database of your Google data for us, or anyone, to breach &mdash; the extension calls Google's APIs directly from your browser.</li>
+      <li><strong>Encryption in transit.</strong> All communication with Google's APIs (<code>www.googleapis.com</code>, <code>gmail.googleapis.com</code>, <code>oauth2.googleapis.com</code>) happens over HTTPS/TLS.</li>
+      <li><strong>OAuth tokens are never handled by us.</strong> Sign-in and token storage/refresh are delegated entirely to Chrome's built-in <code>chrome.identity</code> API. TrailMail's code never sees, stores, or transmits your Google password, and the access token is kept in Chrome's own secure token cache, not in our extension storage.</li>
+      <li><strong>Local, sandboxed storage only.</strong> Anything TrailMail does store (your Hunter.io key, cached predictions, templates, send-status records) lives in <code>chrome.storage.local</code>, which is sandboxed to the extension and inaccessible to websites, other extensions, or us.</li>
+      <li><strong>Least-privilege scopes.</strong> TrailMail requests the minimum scopes needed (send-only, not read/modify) and never requests broader Gmail, Contacts, or Drive access.</li>
+      <li><strong>User-controlled revocation.</strong> You can disconnect Gmail at any time from the extension popup, which revokes the OAuth token immediately, or revoke access directly at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>. Uninstalling the extension removes all locally stored data.</li>
     </ul>
 
     <h2>What is stored, and where</h2>
