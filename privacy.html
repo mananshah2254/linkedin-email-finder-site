@@ -44,7 +44,7 @@
     <h1>Privacy Policy</h1>
     <p class="muted">TrailMail (Chrome extension) · Last updated: 14 July 2026</p>
 
-    <p style="margin-top:24px">TrailMail ("the extension") helps you predict likely work-email addresses from public company email patterns and, optionally, send emails from your own Gmail account. This policy explains exactly what the extension does and does not do with data, including data obtained through Google APIs.</p>
+    <p style="margin-top:24px">TrailMail ("the extension") helps you predict likely work-email addresses from public company email patterns, request referrals from a job posting, and, optionally, send emails from your own Gmail account. This policy explains exactly what the extension does and does not do with data, including data obtained through Google APIs.</p>
 
     <h2>Summary</h2>
     <ul>
@@ -73,6 +73,7 @@
     <h2>What the extension accesses</h2>
     <ul>
       <li><strong>Public LinkedIn profile data</strong> (names, companies, occupations) visible on the pages you open. This is read in your browser to generate predicted emails. It is <strong>not</strong> transmitted to us or stored off your device.</li>
+      <li><strong>Public job-posting data</strong> on supported job boards (applicant tracking systems such as Greenhouse, Lever, Ashby, Workday and similar) that you open. When you choose to request a referral, the extension reads the visible posting (company, job title, description) in your browser to identify the company and personalize your message. It is <strong>not</strong> transmitted to us or stored off your device.</li>
       <li><strong>Company names</strong> are sent to <a href="https://hunter.io" target="_blank" rel="noopener">Hunter.io</a> (using your own API key) to look up a company's email domain and pattern. See Hunter.io's privacy policy for how they process that request.</li>
       <li><strong>Gmail (optional, only if you connect it):</strong> with your explicit authorization the extension uses the <code>gmail.send</code> scope to send emails <em>you compose</em> from your own account. It sends one message per recipient on your action. The extension <strong>cannot read, search, delete, or modify</strong> your mailbox, because <code>gmail.send</code> grants send only access. Your <code>email</code> address is read once (via Google's userinfo endpoint) only to display which account is connected.</li>
     </ul>
