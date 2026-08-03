@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relay — Privacy Policy</title>
+<style>
+  :root{ --bg:#0B0B0C; --surface:#141416; --line:rgba(255,255,255,.1); --text:#F4F4F6;
+    --muted:#9A9AA2; --faint:#63636B; --accent:#E31937; --em:#F4F4F6; --li:#8C8C96; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ background:var(--bg); color:var(--text); line-height:1.65;
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    padding:64px 22px 120px; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:760px; margin:0 auto; }
+  .mark{ width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(90deg,var(--li) 0 50%,var(--em) 50% 100%); position:relative; }
+  .mark::after{ content:""; position:absolute; inset:22%; border-radius:50%; background:var(--bg); }
+  .mark::before{ content:""; position:absolute; left:50%; top:50%; width:20%; height:20%;
+    transform:translate(-50%,-50%); border-radius:50%; background:var(--accent); }
+  header{ display:flex; align-items:center; gap:14px; margin-bottom:8px; }
+  header b{ font-size:22px; font-weight:600; }
+  h1{ font-size:30px; font-weight:600; letter-spacing:-.02em; margin:26px 0 6px; }
+  .upd{ color:var(--faint); font-size:13px; font-family:ui-monospace,Menlo,monospace;
+    text-transform:uppercase; letter-spacing:.12em; margin-bottom:34px; }
+  h2{ font-size:18px; font-weight:600; margin:34px 0 10px; padding-top:22px; border-top:1px solid var(--line); }
+  p, li{ color:var(--muted); font-size:15px; }
+  p{ margin:10px 0; } ul{ margin:10px 0 10px 22px; } li{ margin:6px 0; }
+  strong{ color:var(--text); font-weight:600; }
+  code{ font-family:ui-monospace,Menlo,monospace; font-size:13px; color:var(--em);
+    background:rgba(255,255,255,.06); padding:1px 6px; border-radius:5px; }
+  a{ color:#B4B4BD; }
+  .box{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:16px 0; }
+  .foot{ margin-top:48px; color:var(--faint); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="mark"></div><b>Relay</b></header>
+  <h1>Privacy Policy</h1>
+  <div class="upd">Last updated: 31 July 2026</div>
+
+  <p>Relay is a Chrome extension that helps you run your own outreach — collecting
+  prospects you choose on LinkedIn, predicting likely work-email addresses from
+  public company patterns, and sending emails you compose from <strong>your own
+  Gmail account</strong>. This policy explains what Relay accesses, what it does
+  with it, and — importantly — what it does <em>not</em> do.</p>
+
+  <div class="box"><strong>The short version.</strong> Relay runs in your browser
+  and sends from your own accounts. Your prospects, templates, keys and settings
+  are stored <strong>locally on your device</strong>. Relay has no server that
+  receives your outreach data, and it never sells or shares your data with
+  advertisers or data brokers.</div>
+
+  <h2>What the extension accesses</h2>
+  <ul>
+    <li><strong>LinkedIn pages you open</strong> — to display Relay's panel and to
+      read the public profile information (name, headline, company, profile URL,
+      connection distance) of prospects <em>you</em> add, and to perform the
+      LinkedIn actions you configure (visit, connect, message, follow).</li>
+    <li><strong>Your own LinkedIn network requests</strong> (read-only) — so you
+      can verify in the dashboard that an action matches LinkedIn's current API
+      before you run it. Relay never blocks, alters, or redirects any request.</li>
+    <li><strong>Hunter.io</strong> — when you provide your own Hunter.io API key,
+      Relay sends company domains to Hunter to look up email patterns and real
+      on-file addresses.</li>
+    <li><strong>Your Gmail account</strong> — when you connect it (see below).</li>
+    <li><strong>An optional tracking endpoint</strong> — if you leave open/click
+      tracking on, sent emails include a tracking pixel and click-wrapped links
+      that call a tracking endpoint. You can self-host it or turn tracking off.</li>
+  </ul>
+
+  <h2>How Relay uses Google user data</h2>
+  <p>Relay requests the minimum Google OAuth scopes needed to let you send email
+  from your own Gmail:</p>
+  <ul>
+    <li><code>openid</code> and <code>userinfo.email</code> — used only to show you
+      <em>which</em> Gmail address is currently connected. Relay does not build a
+      profile of you.</li>
+    <li><code>gmail.send</code> — used only to send the specific emails you compose
+      and queue, at the time your cadence sends them. Relay <strong>cannot read,
+      search, delete, or modify</strong> any message in your mailbox; the send
+      scope grants sending only.</li>
+  </ul>
+  <p>Authentication uses Chrome's <code>identity</code> API and Google's OAuth flow.
+  Relay <strong>never sees or stores your Google password</strong>; Google issues a
+  revocable access token that Chrome manages. You can disconnect at any time in
+  Relay, or revoke access at
+  <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+
+  <div class="box"><strong>Limited Use.</strong> Relay's use of information received
+  from Google APIs adheres to the
+  <a href="https://developers.google.com/terms/api-services-user-data-policy">Google
+  API Services User Data Policy</a>, including the Limited Use requirements. Google
+  user data is used solely to provide and improve the email-sending feature
+  described above, is never transferred to others except as needed to provide that
+  feature (i.e. Google's own API), is never used for advertising, and is never sold.
+  No humans read your Google user data.</p></div>
+
+  <h2>Where your data lives</h2>
+  <p>Your prospects, cadence steps, email templates and attachments, your Hunter.io
+  key, your settings, and the address of your connected Gmail account are stored
+  <strong>locally in your browser</strong> using Chrome's storage. This data does
+  not leave your device except to reach the endpoints <em>you</em> direct it to:
+  LinkedIn, Hunter.io, Google, and (if enabled) your tracking endpoint.</p>
+
+  <h2>Data security</h2>
+  <ul>
+    <li>All network calls (Google, Hunter.io, tracking) are made over <strong>HTTPS
+      (TLS)</strong>.</li>
+    <li>Gmail access uses a short-lived OAuth token handled by Chrome's
+      <code>identity</code> API; <strong>no password is ever stored</strong>, and no
+      long-lived Google credential is written to disk by Relay.</li>
+    <li>Your outreach data is stored <strong>locally</strong> and is never uploaded
+      to any server operated by us.</li>
+    <li>You can clear all stored data at any time by removing the extension.</li>
+  </ul>
+
+  <h2>Tracking (optional)</h2>
+  <p>If open/click tracking is enabled, emails you send include a 1×1 pixel and
+  click-wrapped links that record open and click events against a random,
+  per-install identifier. This is used only to badge ✓ Opened / ↗ Clicked in your
+  own dashboard. You can switch tracking to a self-hosted endpoint or turn it off
+  entirely. Disclose tracking to your recipients where the law requires it.</p>
+
+  <h2>What Relay does not do</h2>
+  <ul>
+    <li>No selling or sharing of your data with advertisers or data brokers.</li>
+    <li>No reading of your mailbox, contacts, or LinkedIn messages.</li>
+    <li>No central server that stores your prospects or the content of your emails.</li>
+    <li>No tracking of your browsing outside the features described here.</li>
+  </ul>
+
+  <h2>Your responsibilities</h2>
+  <p>Generated email addresses are <strong>predictions from public company
+  patterns</strong>, not verified addresses. Automating LinkedIn is against
+  LinkedIn's User Agreement. You are responsible for using Relay lawfully,
+  including compliance with anti-spam laws (such as CAN-SPAM and GDPR) and the
+  terms of the services you connect.</p>
+
+  <h2>Changes</h2>
+  <p>We may update this policy; material changes will be reflected in the "Last
+  updated" date above.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy: <a href="mailto:manan.hiren.shah@gmail.com">manan.hiren.shah@gmail.com</a>.</p>
+
+  <div class="foot">© 2026 Relay. Relay is not affiliated with, endorsed by, or
+  sponsored by LinkedIn, Google, or Hunter.io.</div>
+</div>
+</body>
+</html>
